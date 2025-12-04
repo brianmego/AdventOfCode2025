@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 #[cfg(test)]
 pub const PUZZLE_INPUT: &str = include_str!("../../data/sample_input.txt");
 
