@@ -6,7 +6,9 @@ pub const PUZZLE_INPUT: &str = include_str!("../../data/sample_input.txt");
 #[cfg(not(test))]
 pub const PUZZLE_INPUT: &str = include_str!("../../data/puzzle_input.txt");
 
-struct InstructionSet;
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct InstructionSet;
 
 impl From<&str> for InstructionSet {
     fn from(value: &str) -> Self {
