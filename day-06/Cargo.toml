@@ -1,0 +1,11 @@
+[package]
+name = "day-06"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+aoc-utils = { version = "0.1.0", path = "../aoc-utils" }
+nom = "8.0.0"
+
+[dev-dependencies]
+test-case = "3.3.1"
