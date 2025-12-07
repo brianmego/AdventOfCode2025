@@ -26,7 +26,7 @@ where
 
 pub fn parse_collection<T>(inp: &str) -> IResult<&str, Collection<T>>
 where
-    T: ParseableCharacters + TryFrom<char> + Copy,
+    T: ParseableCharacters + TryFrom<char> + Copy + PartialEq,
     <T as TryFrom<char>>::Error: Debug,
 {
     let (inp, rows) = many1(terminated(many1(parse_tile_type), newline))(inp)?;
@@ -44,7 +44,7 @@ where
 
 pub fn parse_collection_group<T>(inp: &str) -> IResult<&str, CollectionGroup<T>>
 where
-    T: ParseableCharacters + TryFrom<char> + Copy,
+    T: ParseableCharacters + TryFrom<char> + Copy + PartialEq,
     <T as TryFrom<char>>::Error: Debug,
 {
     many1(terminated(parse_collection, many0(newline)))(inp)
@@ -59,6 +59,11 @@ pub trait ParseableCharacters {
 pub struct Loc {
     x: isize,
     y: isize,
+}
+impl Display for Loc {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?},{:?}", self.x, self.y)
+    }
 }
 
 impl Loc {
@@ -134,7 +139,7 @@ where
 pub struct Collection<T>(Vec<Tile<T>>);
 impl<T> Collection<T>
 where
-    T: ParseableCharacters + Copy + TryFrom<char>,
+    T: ParseableCharacters + Copy + TryFrom<char> + PartialEq,
 {
     fn push(&mut self, tile: Tile<T>) {
         self.0.push(tile)
@@ -150,6 +155,12 @@ where
     }
     pub fn count_columns(&self) -> usize {
         self.0.iter().unique_by(|t| t.loc.x).count()
+    }
+    pub fn count_tile_type(&self, tile_type: &T) -> usize {
+        self.tiles()
+            .iter()
+            .filter(|t| t.get_type() == tile_type)
+            .count()
     }
     pub fn len(&self) -> usize {
         self.0.len()
